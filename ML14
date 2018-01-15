@@ -1,0 +1,64 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan  9 12:50:26 2018
+
+@author: wanghaigang
+"""
+
+import matplotlib.pyplot as plt
+from sklearn import linear_model
+
+datasets_x = []
+datasets_y = []
+
+fr = open('prices.txt','r')
+lines = fr.readlines()
+
+for line in lines:
+    items = line.strip().split(',')
+    datasets_x.append(int(items[0]))
+    datasets_y.append(int(items[1]))
+    
+length = len(datasets_x)
+
+datasets_x = np.array(datasets_x).reshape([length,1])
+datasets_y = np.array(datasets_y)
+
+minX = min(datasets_x)
+maxX = max(datasets_x)
+x = np.arange(minX,maxX).reshape([-1,1])
+
+
+linear = linear_model.LinearRegression()
+
+'''
+fit_intercept: 布尔型参数，表示是否计算该模型截距。可选参数。
+normalize: 布尔型参数，若为True，则X在回归前进行归一化。可选参数。默认值为False
+
+'''
+
+linear.fit(datasets_x,datasets_y)
+
+'''
+X: 为训练向量；
+Y: 为相对于X的目标向量；
+sample_weight: 分配给各个样本的权重数组，一般不需要使用，可省略。
+
+2: 如果有需要，可以通过两个属性查看回归方程的系数及截距
+
+
+'''
+
+#查看回归方程系数
+
+print('Coefficients:', linear.coef_)
+print('Intercept:', linear.intercept_)
+
+#可视化处理
+
+plt.scatter(datasets_x,datasets_y, color= 'red')
+plt.plot(x, linear.predict(x), color = 'blue')
+plt.xlabel('Area')
+plt.ylabel('Price')
+plt.show()

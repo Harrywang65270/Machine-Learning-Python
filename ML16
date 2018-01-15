@@ -1,0 +1,65 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan 11 16:56:03 2018
+
+@author: wanghaigang
+
+线性回归
+对于一般地线性回归问题，参数地求解采用地是最小二乘法，其目标函数如下：
+
+argmin|Xw-y|
+
+参数w的求解，也可以使用如下矩阵方法进行：
+
+w = (x^Tx)^-1 X^T y
+在计算(x^Tx)^-1时会出现不稳定性
+结论： 传统的基于最小二乘的线性回归法缺乏稳定性
+
+岭回归的优化目标：
+argmin(|Xw-y|^2 + alpha|w|^2
+对应的矩阵求解方法为：
+w = (X^TX + alphaI)^-1 X^T y
+
+
+在sklearn库中，可以使用sklearn.linear_model.Ridge调用岭回归模型，主要参数：
+alpha: 正则化因子，对应于损失函数中的alpha
+fit_intercept: 表示是否计算截距。
+solver：设置计算参数的方法，可选参数‘auto’，‘svd’，‘sag’等。
+
+"""
+
+import numpy as np
+from sklearn.linear_model import Ridge
+from sklearn import cross_validation
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import PolynomialFeatures
+# 通过sklearn.preprocessing 加载 PolynomialFeatures 用于创建多项式特征，如ab,a^2,b^2
+
+data = np.genfromtxt('data.csv',dtype='int',delimiter=',').reshape(20847,6)
+# plt.plot(data[:,5])
+
+X = data[:,1:5]
+
+y = data[:,5]
+
+poly = PolynomialFeatures(6)
+X = poly.fit_transform(X)
+
+train_set_x, test_set_x, train_set_y, test_set_y = cross_validation.train_test_split(
+        X,y,test_size=0.3,random_state=0)
+
+clf = Ridge(alpha=1.0,fit_intercept = True)
+clf.fit(train_set_x, train_set_y)
+clf.score(test_set_x,test_set_y)
+
+start = 200
+end = 300
+y_pre = clf.predict(X)
+
+time = np.arange(start,end)
+plt.plot(time,y[start:end],'b',label='real')
+plt.plot(time,y_pre[start:end],'r',label='predict')
+
+plt.legend(loc='upper left')
+plt.show()

@@ -1,0 +1,60 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jan 11 16:06:44 2018
+
+@author: wanghaigang
+
+使用算法： 线性回归
+实现步骤：
+1. 建立工程并导入sklearn包
+2. 加载训练数据，建立回归方程。
+3. 可视化处理
+
+"""
+
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import linear_model
+from sklearn.preprocessing import PolynomialFeatures
+
+
+'''
+sklearn中多项式回归：
+例如： X = [x1, x2]
+1. 使用PolynomialFeatures构造X的二次多项式特征X_Poly
+X_Poly = [x1,x2,x1x2,x1^2,x2^2]
+2. 使用linear_model学习X_Poly和y之间的映射关系，即参数
+w1x1 + w2x2 + w3x1x2 + w4x1^2 + w5x2^2 = y
+
+'''
+
+datasets_x = []
+datasets_y = []
+
+fr = open('prices.txt','r')
+lines = fr.readlines()
+
+for line in lines:
+    items = line.strip().split(',')
+    datasets_x.append(int(items[0]))
+    datasets_y.append(int(items[1]))
+    
+length = len(datasets_x)
+datasets_x = np.array(datasets_x).reshape([length,1])
+datasets_y = np.array(datasets_y)
+
+minX = min(datasets_x)
+maxX = max(datasets_x)
+x = np.arange(minX, maxX).reshape([-1,1])
+
+poly_reg = PolynomialFeatures(degree = 2) 
+X_poly = poly_reg.fit_transform(datasets_x)
+lin_reg_2 = linear_model.LinearRegression()
+lin_reg_2.fit(X_poly,datasets_Y)
+
+plt.scatter(datasets_x, datasets_y, color = 'red')
+plt.plot(x, lin_reg_2.predict(poly_reg.fit_transform(x)), color='blue')
+plt.xlabel('Area')
+plt.ylabel('Price')
+plt.show()   

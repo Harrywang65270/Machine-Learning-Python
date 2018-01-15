@@ -1,0 +1,31 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jan  6 14:00:14 2018
+
+@author: wanghaigang
+"""
+
+from sklearn.cluster import KMeans
+import numpy as np
+
+
+x = np.array([[1,2],[1,4],[1,0],[4,2],[4,4],[4,0]])
+
+
+'''
+kmeans = KMeans(n_clusters=2,random_state=0)
+label = kmeans.fit_predict(x)
+print label
+'''
+
+
+kmeans = KMeans(n_clusters=2,random_state=0).fit(x)
+print kmeans.labels_
+print kmeans.cluster_centers_
+expenses = np.sum()
+a = kmeans.predict([[0,0],[4,4],[6,6]])
+print a.shape
+
+
+
